@@ -1,0 +1,127 @@
+APp
+//****************
+import React,{Component} from "react";
+import "./style.css";
+import Header from "./Header"
+import Server from "./Server"
+import Listview from "./Listview"
+import Tableheader from "./Tableheader"
+var itemname=""
+var items=[];
+var taskname=""
+var itemTobeDisplayed="";
+function LatestItem(props){
+  const latestitem=props.latestitem
+  let Table=""
+  if(latestitem.length==0)
+  {
+    itemTobeDisplayed="";
+  }
+  else
+  {
+    itemTobeDisplayed=latestitem[0]["taskname"]
+    Table=latestitem.map((item=><Listview taskname={item.taskname} status={item.status}/>))
+    console.log(Table)
+  }
+  return(
+    <div>
+    {Table}
+    </div>
+  )
+}
+class App extends Component {
+  constructor(){
+    super()
+    this.state={
+      items:[]
+    }
+    this.handleSubmit=this.handleSubmit.bind(this)
+  }
+  handleSubmit(event){
+    event.preventDefault()
+    var itemname=document.getElementById("itemname").value
+    const currentitems={"taskname":itemname,"status":"Open"}
+    let previtems=this.state.items
+    previtems.push(currentitems)
+    // console.log(previtems);
+    this.setState({
+      items:previtems
+    })
+    itemname=""
+    var newitem=this.state.items
+    document.getElementById("itemname").value=""
+    // console.log(newitem[0]["taskname"])
+  }
+  render(){
+  return (
+    <div>
+      <Header/>
+      <form>
+        <input type="text" id="itemname"/>
+        <input type="submit" value="Submit" onClick={this.handleSubmit}/>  
+      </form>
+      <table class="table ">
+      <div>
+      <thead class="thead-dark">
+          <tr>
+            <th scope="col">Item Name</th>
+            <th scope="col">Status</th>
+            <th scope="col"></th>
+          </tr>
+    </thead>
+        <tbody>
+        <LatestItem latestitem={this.state.items}/>
+        </tbody>
+    </div>
+      
+      </table>
+    </div>
+  );
+  }
+}
+export default App;
+//********************
+List View
+//*****************
+import React from 'react';
+import './style.css';
+function Listview(props) {
+  return (
+          <tr>
+            <td scope="row">{props.taskname}</td>
+            <td scope="row">{props.status}</td>
+            <td scope="row"> 
+              <button class="table-button" onClick={props.onClick}>
+                Completed
+              </button>
+            </td> 
+          </tr>
+
+  );
+}
+export default Listview;
+//***********************
+import React from 'react';
+import './style.css';
+let btnid=""
+let taskid=""
+let statusid=""
+function Listview(props) {
+  taskid="taskid"+props.taskname
+  btnid="btn"+props.taskname
+  statusid="status"+props.taskname
+  return (
+          <tr >
+            <td scope="row" class={taskid} id={taskid}>{props.taskname}</td>
+            <td scope="row" id={statusid} class="status">{props.status}</td>
+            <td scope="row"> 
+              <button class="table-button" id={btnid} onClick={props.onClick}>
+                Mark as Completed
+              </button>
+            </td> 
+          </tr>
+
+  );
+}
+export default Listview;
+//***********
